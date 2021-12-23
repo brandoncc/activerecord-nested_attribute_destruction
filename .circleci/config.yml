@@ -38,7 +38,6 @@ jobs:
             # install the bundler version that was used to build the lock file
             gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
             bundle config set --local path 'vendor/bundle'
-            bundle install
 
       - run:
           name: |
