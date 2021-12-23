@@ -134,6 +134,14 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.15.0)
       parser (>= 3.0.1.1)
+    rubocop-rails (2.12.4)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.7.0, < 2.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
+    rubocop-rspec (2.6.0)
+      rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -162,6 +170,9 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec (~> 3.0)
   rubocop (~> 1.21)
+  rubocop-rails (~> 2.12)
+  rubocop-rake (~> 0.6.0)
+  rubocop-rspec (~> 2.6)
   sqlite3
 
 BUNDLED WITH
