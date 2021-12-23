@@ -2,8 +2,6 @@
 
 module NestedAttributeDestruction
   class Monitor
-    class InvalidAssociationType < StandardError; end
-
     def initialize
       @attributes_marked_for_destruction = Set.new
       @attributes_destroyed_during_last_save = Set.new
