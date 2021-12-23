@@ -14,7 +14,7 @@ jobs:
       - checkout
       - run:
           name: |
-            Running build against ruby << parameters.ruby-version }} and
+            Running build against ruby << parameters.ruby-version >> and
             activerecord << parameters.active-record-version >>
           command: |
             asdf local ruby << parameters.ruby-version >>
