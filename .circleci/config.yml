@@ -27,6 +27,12 @@ jobs:
             bundle update
 
       - run:
+          name: Set ruby version in rubocop config
+          command: |
+            echo "---> Updating rails version in bundle"
+            sed -i "s/^\(.*TargetRubyVersion:\).*$/\1 << parameters.ruby-version >>/" .rubocop.yml
+
+      - run:
           name: Running build
           command: |
             bundle exec rake
