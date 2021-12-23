@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nested_attribute_destruction (0.1.0)
+    activerecord-nested_attribute_destruction (0.1.0)
       activerecord (>= 5.2.0)
 
 GEM
@@ -156,7 +156,7 @@ PLATFORMS
   arm64-darwin-21
 
 DEPENDENCIES
-  nested_attribute_destruction!
+  activerecord-nested_attribute_destruction!
   pry
   rails (~> 5.2)
   rake (~> 13.0)

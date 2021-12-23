@@ -3,7 +3,7 @@
 require_relative "lib/nested_attribute_destruction/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "nested_attribute_destruction"
+  spec.name          = "activerecord-nested_attribute_destruction"
   spec.version       = NestedAttributeDestruction::VERSION
   spec.authors       = ["Brandon Conway"]
   spec.email         = ["brandoncc@gmail.com"]
