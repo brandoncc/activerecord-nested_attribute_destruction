@@ -19,11 +19,11 @@ jobs:
             echo "---> Installing ASDF plugin for ruby"
             asdf plugin-add ruby
 
+            echo "---> Installing ruby << parameters.ruby-version >>"
+            asdf install ruby << parameters.ruby-version >>
+
             echo "---> Setting local ruby version"
             asdf local ruby << parameters.ruby-version >>
-
-            echo "---> Installing ruby << parameters.ruby-version >>"
-            asdf install
 
       - run:
           name: |
