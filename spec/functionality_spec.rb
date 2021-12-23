@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-require_relative 'support/models/harbor.rb'
-require_relative 'support/models/lighthouse.rb'
-require_relative 'support/models/ship.rb'
+require_relative "support/models/harbor"
+require_relative "support/models/lighthouse"
+require_relative "support/models/ship"
 
-RSpec.describe 'Nested attributes functionality' do
-  context 'has_many relationship' do
-    context 'nested attributes can be destroyed' do
-      let(:harbor) { DangerousHarbor.create(name: 'Blue Lagoon') }
+RSpec.describe "Nested attributes functionality" do
+  context "has_many relationship" do
+    context "nested attributes can be destroyed" do
+      let(:harbor) { DangerousHarbor.create(name: "Blue Lagoon") }
       let!(:ship1) { (harbor.ships << Ship.create(harbor: harbor)).first }
       let!(:ship2) { (harbor.ships << Ship.create(harbor: harbor)).first }
 
-      context 'nested collection has one destroyed object' do
-        it 'returns true' do
+      context "nested collection has one destroyed object" do
+        it "returns true" do
           harbor.ships_attributes = [
             ship1.attributes.merge('_destroy': true),
             ship2.attributes.merge(fuel_remaining: 10)
@@ -26,8 +26,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'nested collection has more than one destroyed object' do
-        it 'returns true' do
+      context "nested collection has more than one destroyed object" do
+        it "returns true" do
           harbor.ships_attributes = [
             ship1.attributes.merge('_destroy': true),
             ship2.attributes.merge('_destroy': true)
@@ -39,8 +39,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'nested collection has zero destroyed objects' do
-        it 'returns false' do
+      context "nested collection has zero destroyed objects" do
+        it "returns false" do
           harbor.ships_attributes = [
             ship1.attributes.merge(fuel_remaining: 10),
             ship2.attributes.merge(fuel_remaining: 5)
@@ -52,8 +52,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'destroyed state is reset on every save' do
-        it 'returns true and then false' do
+      context "destroyed state is reset on every save" do
+        it "returns true and then false" do
           harbor.ships_attributes = [
             ship1.attributes.merge('_destroy': true),
             ship2.attributes.merge(fuel_remaining: 10)
@@ -67,8 +67,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'destroyed state is reset during reload' do
-        it 'returns true and then false' do
+      context "destroyed state is reset during reload" do
+        it "returns true and then false" do
           harbor.ships_attributes = [
             ship1.attributes.merge('_destroy': true),
             ship2.attributes.merge(fuel_remaining: 10)
@@ -82,8 +82,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'destroyed state is not shared between objects' do
-        it 'returns true and then false' do
+      context "destroyed state is not shared between objects" do
+        it "returns true and then false" do
           harbor.ships_attributes = [
             ship1.attributes.merge('_destroy': true),
             ship2.attributes.merge(fuel_remaining: 10)
@@ -99,11 +99,11 @@ RSpec.describe 'Nested attributes functionality' do
       end
     end
 
-    context 'nested attributes cannot be destroyed' do
-      let(:harbor) { SafeHarbor.create(name: 'Blue Lagoon') }
+    context "nested attributes cannot be destroyed" do
+      let(:harbor) { SafeHarbor.create(name: "Blue Lagoon") }
       let!(:ship) { (harbor.ships << Ship.create(harbor: harbor)).first }
 
-      it 'returns false' do
+      it "returns false" do
         harbor.ships_attributes = [
           ship.attributes.merge('_destroy': true)
         ]
@@ -115,13 +115,13 @@ RSpec.describe 'Nested attributes functionality' do
     end
   end
 
-  context 'has_one relationship' do
-    context 'nested attribute can be destroyed' do
-      let(:harbor) { DangerousHarbor.create(name: 'Blue Lagoon') }
+  context "has_one relationship" do
+    context "nested attribute can be destroyed" do
+      let(:harbor) { DangerousHarbor.create(name: "Blue Lagoon") }
       let!(:lighthouse) { Lighthouse.create(harbor: harbor) }
 
-      context 'attribute was destroyed' do
-        it 'returns true' do
+      context "attribute was destroyed" do
+        it "returns true" do
           harbor.lighthouse_attributes =
             lighthouse.attributes.merge('_destroy': true)
 
@@ -131,8 +131,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'attribute was not destroyed' do
-        it 'returns false' do
+      context "attribute was not destroyed" do
+        it "returns false" do
           harbor.lighthouse_attributes =
             lighthouse.attributes.merge(name: "Red 'n White")
 
@@ -142,8 +142,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'destroyed state is reset on every save' do
-        it 'returns true and then false' do
+      context "destroyed state is reset on every save" do
+        it "returns true and then false" do
           harbor.lighthouse_attributes =
             lighthouse.attributes.merge('_destroy': true)
 
@@ -155,8 +155,8 @@ RSpec.describe 'Nested attributes functionality' do
         end
       end
 
-      context 'destroyed state is reset during reload' do
-        it 'returns true and then false' do
+      context "destroyed state is reset during reload" do
+        it "returns true and then false" do
           harbor.lighthouse_attributes =
             lighthouse.attributes.merge('_destroy': true)
 
@@ -169,11 +169,11 @@ RSpec.describe 'Nested attributes functionality' do
       end
     end
 
-    context 'nested attribute cannot be destroyed' do
-      let(:harbor) { SafeHarbor.create(name: 'Blue Lagoon') }
+    context "nested attribute cannot be destroyed" do
+      let(:harbor) { SafeHarbor.create(name: "Blue Lagoon") }
       let!(:lighthouse) { Lighthouse.create(harbor: harbor) }
 
-      it 'returns false' do
+      it "returns false" do
         harbor.lighthouse_attributes =
           lighthouse.attributes.merge('_destroy': true)
 

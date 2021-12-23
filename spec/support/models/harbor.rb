@@ -6,14 +6,14 @@ class Harbor < ActiveRecord::Base
 end
 
 class DangerousHarbor < Harbor
-  self.table_name = 'harbors'
+  self.table_name = "harbors"
 
   # this verifies that we handle more than one column in a single call
   accepts_nested_attributes_for :lighthouse, :ships, allow_destroy: true
 end
 
 class SafeHarbor < Harbor
-  self.table_name = 'harbors'
+  self.table_name = "harbors"
 
   # this verifies that we handle more than one call
   accepts_nested_attributes_for :ships

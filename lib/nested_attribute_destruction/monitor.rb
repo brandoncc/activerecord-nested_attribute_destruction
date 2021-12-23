@@ -11,28 +11,8 @@ module NestedAttributeDestruction
       def define_hooks(klass)
         return if hooks_defined?(klass)
 
-        klass.before_update do |obj|
-          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
-          @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
-        end
-
-        klass.after_update do
-          @nested_attribute_destruction_monitor.send(:save_succeeded)
-        end
-
-        klass.alias_method :_rails_reload, :reload
-
-        klass.class_eval do
-          def reload(*args)
-            ret_val = _rails_reload(*args)
-
-            # run our code after rails' code, in case the rails code blows up
-            @nested_attribute_destruction_monitor&.send(:reset)
-
-            # make sure we return the value that rails intended
-            ret_val
-          end
-        end
+        define_callbacks(klass)
+        redefine_reload(klass)
 
         hooks_defined!(klass)
       end
@@ -46,12 +26,39 @@ module NestedAttributeDestruction
 
       private
 
+      def define_callbacks(klass)
+        klass.before_update do |obj|
+          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
+          @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
+        end
+
+        klass.after_update do
+          @nested_attribute_destruction_monitor.send(:save_succeeded)
+        end
+      end
+
       def hooks_defined?(klass)
         klass.instance_variable_get(:@nested_attribute_destruction_monitor_hooks_defined)
       end
 
       def hooks_defined!(klass)
         klass.instance_variable_set(:@nested_attribute_destruction_monitor_hooks_defined, true)
+      end
+
+      def redefine_reload(klass)
+        klass.alias_method :_rails_reload, :reload
+
+        klass.class_eval do
+          def reload(*args)
+            ret_val = _rails_reload(*args)
+
+            # run our code after rails' code, in case the rails code blows up
+            @nested_attribute_destruction_monitor&.send(:reset)
+
+            # make sure we return the value that rails intended
+            ret_val
+          end
+        end
       end
     end
 
@@ -100,7 +107,7 @@ module NestedAttributeDestruction
 
     def store_one_association(obj, assoc_name)
       return unless obj.send(assoc_name)&.marked_for_destruction? &&
-        !obj.send(assoc_name)&.destroyed?
+                    !obj.send(assoc_name)&.destroyed?
 
       @attributes_marked_for_destruction.add(assoc_name)
     end

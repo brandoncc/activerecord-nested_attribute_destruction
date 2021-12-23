@@ -8,9 +8,9 @@ require "nested_attribute_destruction"
 
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
-require_relative '../spec/support/models/harbor.rb'
-require_relative '../spec/support/models/lighthouse.rb'
-require_relative '../spec/support/models/ship.rb'
+require_relative "../spec/support/models/harbor"
+require_relative "../spec/support/models/lighthouse"
+require_relative "../spec/support/models/ship"
 
 load "spec/support/schema.rb"
 

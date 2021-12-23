@@ -1,12 +1,15 @@
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+
 unless defined?(ActiveRecord::NestedAttributes)
-  raise 'activerecord-nested_attribute_destruction gem must be loaded after active_record'
+  raise "activerecord-nested_attribute_destruction gem must be loaded after active_record"
 end
 
 module ActiveRecord
   module NestedAttributes
     module ClassMethods
-      alias_method :_rails_accepts_nested_attributes_for, :accepts_nested_attributes_for
+      alias _rails_accepts_nested_attributes_for accepts_nested_attributes_for
 
+      # rubocop:disable Metrics/AbcSize
       def accepts_nested_attributes_for(*attr_names)
         _rails_accepts_nested_attributes_for(*attr_names)
 
@@ -14,13 +17,13 @@ module ActiveRecord
         attr_names.extract_options!
 
         unless respond_to?(:nested_attribute_destruction_watch_associations)
-          def self.nested_attribute_destruction_watch_associations
+          self.class.define_method(:nested_attribute_destruction_watch_associations) do
             @nested_attribute_destruction_watch_associations || {}
           end
         end
 
         unless respond_to?(:nested_attribute_destruction_watch_association)
-          def self.nested_attribute_destruction_watch_association(assoc, type)
+          self.class.define_method(:nested_attribute_destruction_watch_association) do |assoc, type|
             @nested_attribute_destruction_watch_associations ||= {}
             @nested_attribute_destruction_watch_associations[assoc.to_sym] = type
           end
@@ -41,3 +44,6 @@ module ActiveRecord
     end
   end
 end
+
+# rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+# rubocop:enable Metrics/AbcSize
