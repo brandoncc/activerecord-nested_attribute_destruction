@@ -5,13 +5,15 @@ ActiveRecord::Schema.define(version: 1) do
 
   create_table "harbors", force: :cascade do |t|
     t.string "name", null: false
-
-    t.timestamps
   end
 
   create_table "ships", force: :cascade do |t|
     t.integer "harbor_id", null: false
+    t.integer "fuel_remaining"
+  end
 
-    t.timestamps
+  create_table "lighthouses", force: :cascade do |t|
+    t.integer "harbor_id", null: false
+    t.string "name"
   end
 end
