@@ -23,13 +23,10 @@ jobs:
           name: |
             Installing rails << parameters.active-record-version >>
           command: |
-            echo "---> Removing rails from bundle"
-            bundle remove rails
+            echo "---> Updating rails version in bundle"
+            sed -i 's/^.*gem "rails.*$/gem "rails", "<< parameters.active-record-version >>"/' Gemfile
 
-            echo "---> Adding the correct version of rails to the bundle"
-            bundle add --version=<< parameters.active-record-version >>
-
-            bundle exec rake
+            bundle update
 
       - run:
           name: Running build
