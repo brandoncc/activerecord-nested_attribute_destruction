@@ -19,10 +19,6 @@ jobs:
             apk add --no-cache sqlite-dev
 
       - run:
-          name: Intall build headers
-          command: apk update && apk add linux-headers
-
-      - run:
           name: |
             Installing ruby << parameters.ruby-version >>
           command: |
