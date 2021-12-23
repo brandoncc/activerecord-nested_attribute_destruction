@@ -17,6 +17,7 @@ jobs:
             Running build against ruby << parameters.ruby-version >> and
             activerecord << parameters.active-record-version >>
           command: |
+            asdf plugin-add ruby
             asdf local ruby << parameters.ruby-version >>
 
             # install the bundler version that was used to build the lock file
