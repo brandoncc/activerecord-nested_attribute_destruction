@@ -1,15 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rubygems"
+require "active_record/railtie"
 require "bundler/setup"
 require "nested_attribute_destruction"
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
+require_relative '../spec/support/models/harbor.rb'
+require_relative '../spec/support/models/lighthouse.rb'
+require_relative '../spec/support/models/ship.rb'
 
-require "irb"
-IRB.start(__FILE__)
+load "spec/support/schema.rb"
+
+require "pry"
+Pry.start
