@@ -1,4 +1,6 @@
-raise 'nested_attribute_destruction gem must be loaded after active_record' unless defined?(ActiveRecord)
+unless defined?(ActiveRecord::NestedAttributes)
+  raise 'activerecord-nested_attribute_destruction gem must be loaded after active_record'
+end
 
 module ActiveRecord
   module NestedAttributes
@@ -11,8 +13,20 @@ module ActiveRecord
         # remove any options from the end of the array
         attr_names.extract_options!
 
-        @nested_attribute_destruction ||= NestedAttributeDestruction::Monitor.new
-        @nested_attribute_destruction.define_callbacks(self) if attr_names.any?
+        unless respond_to?(:nested_attribute_destruction_watch_associations)
+          def self.nested_attribute_destruction_watch_associations
+            @nested_attribute_destruction_watch_associations || {}
+          end
+        end
+
+        unless respond_to?(:nested_attribute_destruction_watch_association)
+          def self.nested_attribute_destruction_watch_association(assoc, type)
+            @nested_attribute_destruction_watch_associations ||= {}
+            @nested_attribute_destruction_watch_associations[assoc.to_sym] = type
+          end
+        end
+
+        NestedAttributeDestruction::Monitor.define_hooks(self) if attr_names.any?
 
         attr_names.each do |association_name|
           reflection = _reflect_on_association(association_name)
@@ -20,8 +34,8 @@ module ActiveRecord
 
           type = (reflection.collection? ? :many : :one)
 
-          @nested_attribute_destruction.watch(association_name, type)
-          @nested_attribute_destruction.define_predicate(self, association_name)
+          nested_attribute_destruction_watch_association(association_name, type)
+          NestedAttributeDestruction::Monitor.define_predicate(self, association_name)
         end
       end
     end

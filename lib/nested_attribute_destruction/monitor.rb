@@ -5,47 +5,59 @@ module NestedAttributeDestruction
     class InvalidAssociationType < StandardError; end
 
     def initialize
-      @watched_associations = {}
       @attributes_marked_for_destruction = Set.new
       @attributes_destroyed_during_last_save = Set.new
     end
 
-    def define_callbacks(klass)
-      return if callbacks_defined?
+    class << self
+      def define_hooks(klass)
+        return if hooks_defined?(klass)
 
-      monitor = self
-      klass.before_update { |obj| monitor.send(:store_attributes_marked_for_destruction, obj) }
-      klass.after_update { monitor.send(:save_succeeded) }
+        klass.before_update do |obj|
+          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
+          @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
+        end
 
-      callbacks_defined!
-    end
+        klass.after_update do
+          @nested_attribute_destruction_monitor.send(:save_succeeded)
+        end
 
-    def define_predicate(klass, assoc_name)
-      monitor = self
-      klass.define_method("#{assoc_name}_destroyed_during_save?") do
-        monitor.send(:destroyed_during_save?, assoc_name.to_sym)
+        klass.alias_method :_rails_reload, :reload
+
+        klass.class_eval do
+          def reload(*args)
+            ret_val = _rails_reload(*args)
+
+            # run our code after rails' code, in case the rails code blows up
+            @nested_attribute_destruction_monitor&.send(:reset)
+
+            # make sure we return the value that rails intended
+            ret_val
+          end
+        end
+
+        hooks_defined!(klass)
+      end
+
+      def define_predicate(klass, assoc_name)
+        klass.define_method("#{assoc_name}_destroyed_during_save?") do
+          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
+          @nested_attribute_destruction_monitor.send(:destroyed_during_save?, assoc_name.to_sym)
+        end
+      end
+
+      private
+
+      def hooks_defined?(klass)
+        klass.instance_variable_get(:@nested_attribute_destruction_monitor_hooks_defined)
+      end
+
+      def hooks_defined!(klass)
+        klass.instance_variable_set(:@nested_attribute_destruction_monitor_hooks_defined, true)
       end
     end
 
-    def watch(association, type)
-      raise InvalidAssociationType unless %i[one many].include?(type)
-
-      add_watched_asociation(association, type)
-    end
-
     private
-
-    def add_watched_asociation(association, type)
-      @watched_associations[association.to_sym] = type
-    end
-
-    def callbacks_defined?
-      @callbacks_defined
-    end
-
-    def callbacks_defined!
-      @callbacks_defined = true
-    end
 
     def clear_attributes_marked_for_destruction
       @attributes_marked_for_destruction.clear
@@ -59,6 +71,11 @@ module NestedAttributeDestruction
       @attributes_destroyed_during_last_save.include?(assoc_name.to_sym)
     end
 
+    def reset
+      @attributes_marked_for_destruction.clear
+      @attributes_destroyed_during_last_save.clear
+    end
+
     def save_succeeded
       clear_attributes_stored_during_last_save
       stored_attributes_were_destroyed
@@ -66,7 +83,7 @@ module NestedAttributeDestruction
     end
 
     def store_attributes_marked_for_destruction(obj)
-      @watched_associations.each_pair do |assoc, type|
+      watched_associations(obj).each_pair do |assoc, type|
         if type == :many
           store_many_association(obj, assoc)
         else
@@ -93,6 +110,10 @@ module NestedAttributeDestruction
     def stored_attributes_were_destroyed
       @attributes_destroyed_during_last_save +=
         @attributes_marked_for_destruction
+    end
+
+    def watched_associations(obj)
+      obj.class.nested_attribute_destruction_watch_associations
     end
   end
 end
