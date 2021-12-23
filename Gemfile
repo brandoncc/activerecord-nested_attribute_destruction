@@ -13,7 +13,7 @@ gem "rubocop", "~> 1.21"
 
 gem "rails", "~> 5.2"
 
-gem "sqlite3"
+gem "sqlite3", "~> 1.4.2"
 
 gem "pry"
 
