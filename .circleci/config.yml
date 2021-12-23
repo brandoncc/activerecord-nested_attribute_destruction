@@ -19,6 +19,7 @@ jobs:
           command: |
             asdf plugin-add ruby
             asdf local ruby << parameters.ruby-version >>
+            asdf install
 
             # install the bundler version that was used to build the lock file
             gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
