@@ -51,6 +51,21 @@ RSpec.describe 'Nested attributes functionality' do
           expect(harbor).not_to be_ships_destroyed_during_save
         end
       end
+
+      context 'destroyed state is reset on every save' do
+        it 'returns true and then false' do
+          harbor.ships_attributes = [
+            ship1.attributes.merge('_destroy': true),
+            ship2.attributes.merge(fuel_remaining: 10)
+          ]
+
+          harbor.save!
+          expect(harbor).to be_ships_destroyed_during_save
+
+          harbor.save!
+          expect(harbor).not_to be_ships_destroyed_during_save
+        end
+      end
     end
 
     context 'nested attributes cannot be destroyed' do
