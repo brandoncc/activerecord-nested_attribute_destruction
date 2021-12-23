@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in nested_attributes_destroyed.gemspec
+# Specify your gem's dependencies in nested_attribute_destruction.gemspec
 gemspec
 
 gem "rake", "~> 13.0"
@@ -14,3 +14,5 @@ gem "rubocop", "~> 1.21"
 gem "rails", "~> 5.2"
 
 gem "sqlite3"
+
+gem "pry"

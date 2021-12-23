@@ -3,7 +3,7 @@
 require "rubygems"
 require "active_record/railtie"
 require "bundler/setup"
-require "nested_attributes_destroyed"
+require "nested_attribute_destruction"
 
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
