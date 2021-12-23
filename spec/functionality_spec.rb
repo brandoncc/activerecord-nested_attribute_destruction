@@ -13,8 +13,6 @@ RSpec.describe 'Nested attributes functionality' do
       let!(:ship1) { (harbor.ships << Ship.create(harbor: harbor)).first }
       let!(:ship2) { (harbor.ships << Ship.create(harbor: harbor)).first }
 
-      before { harbor.reload }
-
       context 'nested collection has one destroyed object' do
         it 'returns true' do
           harbor.ships_attributes = [
@@ -75,8 +73,6 @@ RSpec.describe 'Nested attributes functionality' do
     context 'nested attribute can be destroyed' do
       let(:harbor) { DangerousHarbor.create(name: 'Blue Lagoon') }
       let!(:lighthouse) { Lighthouse.create(harbor: harbor) }
-
-      before { harbor.reload }
 
       context 'attribute was destroyed' do
         it 'returns true' do
