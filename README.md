@@ -29,6 +29,28 @@ Or install it yourself as:
 
 ## Usage
 
+### API
+
+When you call `#accepts_nested_attributes_for`, this gem will automatically
+install its hooks on the class. One method is also added to the class instance
+API: `<association_name>_destroyed_during_save?`.
+
+For example:
+
+```ruby
+has_many :ships
+has_one  :accountant
+
+accepts_nested_attributes_for :ships, :accountant, allow_destroy: true
+```
+
+You can call `ships_destroyed_during_save?` and
+`accountant_destroyed_during_save?` after a save to check if associated ships or
+the accountant were destroyed through nested attribute assignment during the
+save.
+
+### Example
+
 Here is an example of how it works, adapted from the test suite.
 
 ```ruby
