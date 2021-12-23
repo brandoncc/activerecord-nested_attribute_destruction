@@ -14,23 +14,41 @@ jobs:
       - checkout
       - run:
           name: |
-            Running build against ruby << parameters.ruby-version >> and
-            activerecord << parameters.active-record-version >>
+            Installing ruby << parameters.ruby-version >>
           command: |
+            echo "---> Installing ASDF plugin for ruby"
             asdf plugin-add ruby
+
+            echo "---> Setting local ruby version"
             asdf local ruby << parameters.ruby-version >>
+
+            echo "---> Installing ruby << parameters.ruby-version >>"
             asdf install
 
+      - run:
+          name: |
+            Installing the correct version of the bundler gem
+          command: |
             # install the bundler version that was used to build the lock file
             gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
             bundle config set --local path 'vendor/bundle'
             bundle install
 
-            gem install bundler -v 2.2.30
-
+      - run:
+          name: |
+            Installing rails << parameters.active-record-version >>
+          command: |
+            echo "---> Removing rails from bundle"
             bundle remove rails
+
+            echo "---> Adding the correct version of rails to the bundle"
             bundle add --version=<< parameters.active-record-version >>
 
+            bundle exec rake
+
+      - run:
+          name: Running build
+          command: |
             bundle exec rake
 
 workflows:
