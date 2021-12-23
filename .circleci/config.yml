@@ -1,13 +1,44 @@
-version: 2.1
+version: 2
 jobs:
   build:
     docker:
-      - image: ruby:2.6.9
+      - image: lisinge/asdf:latest
+        environment:
+          BASH_ENV: "~/.bashrc" # IMPORTANT!
+    parameters:
+      ruby-version:
+        type: string
+      active-record-version:
+        type: string
     steps:
       - checkout
       - run:
-          name: Run the default task
+          name: |
+            Running build against ruby << parameters.ruby-version }} and
+            activerecord << parameters.active-record-version >>
           command: |
-            gem install bundler -v 2.2.30
+            asdf local ruby << parameters.ruby-version >>
+
+            # install the bundler version that was used to build the lock file
+            gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
+            bundle config set --local path 'vendor/bundle'
             bundle install
+
+            gem install bundler -v 2.2.30
+
+            bundle remove rails
+            bundle add --version=<< parameters.active-record-version >>
+
             bundle exec rake
+
+workflows:
+  all-tests:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              ruby-version: [
+                "2.0.0-p648", "2.1.10", "2.2.10", "2.3.8", "2.4.10", "2.5.9", "2.6.9",
+                "2.7.5", "3.0.3", "3.1.0-preview1"
+              ]
+              activerecord-version: ["~> 5.2.0", "~> 6.0.0", "~> 6.1.0", "~> 7.0.0"]
