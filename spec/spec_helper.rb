@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
+require "rubygems"
+require "active_record/railtie"
+require "bundler/setup"
 require "nested_attributes_destroyed"
+
+ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+
+Dir["support/**/*.rb"].each do |f|
+  require_relative f unless f == "spec/support/schema.rb"
+end
+
+load "support/schema.rb"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
