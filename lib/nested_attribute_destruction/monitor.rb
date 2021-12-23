@@ -76,14 +76,16 @@ module NestedAttributeDestruction
     end
 
     def store_many_association(obj, assoc_name)
-      any = obj.send(assoc_name).load_target.any?(&:marked_for_destruction?)
-      return unless any
+      return unless obj.send(assoc_name).load_target.any? do |el|
+        el.marked_for_destruction? && !el.destroyed?
+      end
 
       @attributes_marked_for_destruction.add(assoc_name)
     end
 
     def store_one_association(obj, assoc_name)
-      return unless obj.send(assoc_name)&.marked_for_destruction?
+      return unless obj.send(assoc_name)&.marked_for_destruction? &&
+        !obj.send(assoc_name)&.destroyed?
 
       @attributes_marked_for_destruction.add(assoc_name)
     end

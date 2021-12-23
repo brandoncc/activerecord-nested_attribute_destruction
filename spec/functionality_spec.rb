@@ -110,6 +110,19 @@ RSpec.describe 'Nested attributes functionality' do
           expect(harbor).not_to be_lighthouse_destroyed_during_save
         end
       end
+
+      context 'destroyed state is reset on every save' do
+        it 'returns true and then false' do
+          harbor.lighthouse_attributes =
+            lighthouse.attributes.merge('_destroy': true)
+
+          harbor.save!
+          expect(harbor).to be_lighthouse_destroyed_during_save
+
+          harbor.save!
+          expect(harbor).not_to be_lighthouse_destroyed_during_save
+        end
+      end
     end
 
     context 'nested attribute cannot be destroyed' do
