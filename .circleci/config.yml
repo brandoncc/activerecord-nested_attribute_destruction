@@ -12,16 +12,14 @@ jobs:
       - checkout
 
       - run:
-          name: |
-            Installing the correct version of the bundler gem
+          name: Installing the correct version of the bundler gem
           command: |
             # install the bundler version that was used to build the lock file
             gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
             bundle config set --local path 'vendor/bundle'
 
       - run:
-          name: |
-            Installing rails << parameters.active-record-version >>
+          name: Installing rails << parameters.active-record-version >>
           command: |
             echo "---> Updating rails version in bundle"
             sed -i 's/^.*gem "rails.*$/gem "rails", "<< parameters.active-record-version >>"/' Gemfile
