@@ -16,7 +16,7 @@ jobs:
             Exit early if ruby and activerecord versions are not
             compatible
           command: |
-            compatible=$(ruby .circleci/configuration_validity_check.rb << parameters.ruby-version >> << parameters.active-record-version >>)
+            compatible=$(ruby .circleci/configuration_validity_check.rb "<< parameters.ruby-version >>" "<< parameters.active-record-version >>")
 
             if [ "$compatible" != "yes" ]; then
               circleci-agent step halt
