@@ -1,6 +1,7 @@
 # activerecord-nested\_attribute\_destruction
 
 Build status for all matrix combinations listed in [compatibility](#compatibility)
+
 [![CircleCI](https://circleci.com/gh/brandoncc/activerecord-nested_attribute_destruction.svg?style=svg)](https://circleci.com/gh/brandoncc/activerecord-nested_attribute_destruction)
 
 Active Record offers introspection of saved changes for almost everything you
