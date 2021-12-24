@@ -22,3 +22,8 @@ Style/Documentation:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Naming/FileName:
+  Enabled: true
+  Exclude:
+    - 'lib/activerecord-nested_attribute_destruction.rb'
