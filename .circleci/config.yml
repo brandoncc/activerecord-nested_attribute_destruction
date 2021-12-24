@@ -2,12 +2,51 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: ruby:2.6.9
+      - image: circleci/ruby:<< parameters.ruby-version >>
+    parameters:
+      ruby-version:
+        type: string
+      active-record-version:
+        type: string
     steps:
       - checkout
+
       - run:
-          name: Run the default task
+          name: |
+            Exit early if ruby and activerecord versions are not
+            compatible
           command: |
-            gem install bundler -v 2.2.30
-            bundle install
+            compatible=$(ruby .circleci/configuration_validity_check.rb "<< parameters.ruby-version >>" "<< parameters.active-record-version >>")
+
+            if [ "$compatible" == "no" ]; then
+              circleci-agent step halt
+            fi
+
+      - run:
+          name: Installing the correct version of the bundler gem
+          command: |
+            # install the bundler version that was used to build the lock file
+            gem install bundler -v $(tail -1 Gemfile.lock | ruby -e "puts STDIN.read.strip")
+            bundle config set --local path 'vendor/bundle'
+
+      - run:
+          name: Installing rails << parameters.active-record-version >>
+          command: |
+            echo "---> Updating rails version in bundle"
+            sed -i 's/^.*gem "rails.*$/gem "rails", "<< parameters.active-record-version >>"/' Gemfile
+
+            bundle update
+
+      - run:
+          name: Running build
+          command: |
             bundle exec rake
+
+workflows:
+  all-tests:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              ruby-version: ["2.5", "2.6", "2.7", "3.0"] # always use x.x form for compatibility check script
+              active-record-version: ["~> 5.2.0", "~> 6.0.0", "~> 6.1.0", "~> 7.0.0"] # always use x.x.x form for compatibility check script

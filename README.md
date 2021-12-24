@@ -87,6 +87,45 @@ No ships were destroyed during the last save operation
 
 To see more examples, take a look at [the tests](https://github.com/brandoncc/activerecord-nested_attribute_destruction/blob/main/spec/functionality_spec.rb).
 
+## Compatibility
+
+This gem is built and its tests are run for the following ruby/active record
+combinations:
+
+### Sorted by Active Record version
+
+| Active Record version | Ruby Version |
+|-----------------------|--------------|
+| 5.2                   | 2.5          |
+| 5.2                   | 2.6          |
+| 5.2                   | 2.7          |
+| 6.0                   | 2.5          |
+| 6.0                   | 2.6          |
+| 6.0                   | 2.7          |
+| 6.1                   | 2.5          |
+| 6.1                   | 2.6          |
+| 6.1                   | 2.7          |
+| 6.1                   | 3.0          |
+| 7.0                   | 2.7          |
+| 7.0                   | 3.0          |
+
+### Sorted by Ruby version
+
+| Ruby Version | Active Record version |
+|--------------|-----------------------|
+| 2.5          | 5.2                   |
+| 2.5          | 6.0                   |
+| 2.5          | 6.1                   |
+| 2.6          | 5.2                   |
+| 2.6          | 6.0                   |
+| 2.6          | 6.1                   |
+| 2.7          | 5.2                   |
+| 2.7          | 6.0                   |
+| 2.7          | 6.1                   |
+| 2.7          | 7.0                   |
+| 3.0          | 6.1                   |
+| 3.0          | 7.0                   |
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
