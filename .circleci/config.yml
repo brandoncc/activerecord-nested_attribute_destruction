@@ -12,6 +12,17 @@ jobs:
       - checkout
 
       - run:
+          name: |
+            Exit early if ruby and activerecord versions are not
+            compatible
+          command: |
+            compatible=$(ruby .circleci/configuration_validity_check.rb "<< parameters.ruby-version >>" "<< parameters.active-record-version >>")
+
+            if [ "$compatible" != "yes" ]; then
+              circleci-agent step halt
+            fi
+
+      - run:
           name: Installing the correct version of the bundler gem
           command: |
             # install the bundler version that was used to build the lock file
@@ -25,18 +36,6 @@ jobs:
             sed -i 's/^.*gem "rails.*$/gem "rails", "<< parameters.active-record-version >>"/' Gemfile
 
             bundle update
-
-      - run:
-          name: |
-            Exit early if ruby and activerecord versions are not
-            compatible
-          command: |
-            activerecord_version=$(bundle info activerecord | grep '* activerecord' | ruby -e 'puts STDIN.read.gsub(/.*\(|\).*/, "")')
-            compatible=$(ruby .circleci/configuration_validity_check.rb "<< parameters.ruby-version >>" "$activerecord_version")
-
-            if [ "$compatible" != "yes" ]; then
-              circleci-agent step halt
-            fi
 
       - run:
           name: Running build
