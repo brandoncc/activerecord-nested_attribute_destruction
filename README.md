@@ -4,6 +4,25 @@ Build status for all matrix combinations listed in [compatibility](#compatibilit
 
 [![CircleCI](https://circleci.com/gh/brandoncc/activerecord-nested_attribute_destruction.svg?style=svg)](https://circleci.com/gh/brandoncc/activerecord-nested_attribute_destruction)
 
+## TL;DR
+
+```ruby
+class Harbor
+  has_many :ships
+
+  accepts_nested_attributes_for :ships, allow_destroy: true
+end
+
+harbor.ships_attributes = [harbor.ships.first.attributes.merge('_destroy': true)]
+harbor.save!
+
+harbor.ships_destroyed_during_save? # true
+```
+
+See that last line of code? That is what this gem adds :smiley:
+
+## Description
+
 Active Record offers introspection of saved changes for almost everything you
 could want. The one thing I have repeatedly found myself wishing for was a way
 to know if a nested attribute was destroyed during save via
@@ -93,8 +112,12 @@ To see more examples, take a look at [the tests](https://github.com/brandoncc/ac
 
 ## Compatibility
 
-This gem is built and its tests are run for the following ruby/active record
-combinations:
+This gem should be compatible with all versions of Ruby 2.3 and higher. It
+should be compatible with Active Record versions 5.2 and up.
+
+Because of rubocop dependencies and keyword arguments changes in Ruby 3.0 which
+affected the database setup code used in the test suite, it is only tested
+against the matrices displayed below.
 
 ### Sorted by Active Record version
 
@@ -129,6 +152,17 @@ combinations:
 | 2.7          | 7.0                   |
 | 3.0          | 6.1                   |
 | 3.0          | 7.0                   |
+
+### Specific requirements
+
+#### Ruby
+
+The safe navigation operator, introducted in Ruby 2.3, is used.
+
+#### Active Record
+
+The [API changes](https://www.fastruby.io/blog/rails/upgrades/active-record-5-1-api-changes.html)
+in Active Record 5.2 are necessary for the core functionality of the gem.
 
 ## Development
 
