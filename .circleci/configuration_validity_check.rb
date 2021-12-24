@@ -16,7 +16,7 @@ end
 
 ruby_version = Gem::Version.new(ARGV[0])
 bounds = VALID_CONFIGURATIONS.fetch(ARGV[0])
-active_record_version = Gem::Version.new(ARGV[1])
+active_record_version = Gem::Version.new(ARGV[1].sub('~> ', ''))
 lower_bound = Gem::Version.new(bounds[:lower])
 upper_bound = Gem::Version.new(bounds[:upper]) if bounds[:upper]
 
