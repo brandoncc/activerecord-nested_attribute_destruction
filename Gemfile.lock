@@ -174,10 +174,10 @@ DEPENDENCIES
   rails (~> 5.2)
   rake (~> 13.0)
   rspec (~> 3.0)
-  rubocop (~> 1.21)
-  rubocop-rails (~> 2.12)
-  rubocop-rake (~> 0.6.0)
-  rubocop-rspec (~> 2.6)
+  rubocop
+  rubocop-rails
+  rubocop-rake
+  rubocop-rspec
   sqlite3 (~> 1.4.2)
 
 BUNDLED WITH

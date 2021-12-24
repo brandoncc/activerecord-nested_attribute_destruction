@@ -16,6 +16,6 @@ gem "sqlite3", "~> 1.4.2"
 gem "pry"
 
 gem "rubocop"
-gem "rubocop-rspec"
-gem "rubocop-rake"
 gem "rubocop-rails"
+gem "rubocop-rake"
+gem "rubocop-rspec"
