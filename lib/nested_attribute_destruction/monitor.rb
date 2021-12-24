@@ -32,7 +32,7 @@ module NestedAttributeDestruction
           @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
         end
 
-        klass.after_update do
+        klass.after_commit(on: :update) do
           @nested_attribute_destruction_monitor.send(:save_succeeded)
         end
       end
