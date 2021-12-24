@@ -18,7 +18,7 @@ jobs:
           command: |
             compatible=$(ruby .circleci/configuration_validity_check.rb "<< parameters.ruby-version >>" "<< parameters.active-record-version >>")
 
-            if [ "$compatible" != "yes" ]; then
+            if [ "$compatible" == "no" ]; then
               circleci-agent step halt
             fi
 
