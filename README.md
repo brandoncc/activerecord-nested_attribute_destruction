@@ -157,7 +157,7 @@ against the matrices displayed below.
 
 #### Ruby
 
-The safe navigation operator, introducted in Ruby 2.3, is used.
+The safe navigation operator, introduced in Ruby 2.3, is used.
 
 #### Active Record
 
