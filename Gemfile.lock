@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord-nested_attribute_destruction (0.1.0)
+    activerecord-nested_attribute_destruction (0.1.1)
       activerecord (>= 5.2.0)
 
 GEM
@@ -181,4 +181,4 @@ DEPENDENCIES
   sqlite3 (~> 1.4.2)
 
 BUNDLED WITH
-   2.3.2
+   2.3.4
