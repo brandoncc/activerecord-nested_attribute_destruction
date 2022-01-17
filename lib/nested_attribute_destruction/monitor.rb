@@ -19,7 +19,6 @@ module NestedAttributeDestruction
 
       def define_predicate(klass, assoc_name)
         klass.define_method("#{assoc_name}_destroyed_during_save?") do
-          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
           @nested_attribute_destruction_monitor.send(:destroyed_during_save?, assoc_name.to_sym)
         end
       end
@@ -27,8 +26,11 @@ module NestedAttributeDestruction
       private
 
       def define_callbacks(klass)
+        klass.after_initialize do
+          @nested_attribute_destruction_monitor = NestedAttributeDestruction::Monitor.new
+        end
+
         klass.before_update do |obj|
-          @nested_attribute_destruction_monitor ||= NestedAttributeDestruction::Monitor.new
           @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
         end
 
