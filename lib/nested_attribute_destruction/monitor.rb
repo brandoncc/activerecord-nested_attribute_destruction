@@ -30,11 +30,9 @@ module NestedAttributeDestruction
           @nested_attribute_destruction_monitor = NestedAttributeDestruction::Monitor.new
         end
 
-        klass.before_update do |obj|
+        klass.around_update do |obj, block|
           @nested_attribute_destruction_monitor.send(:store_attributes_marked_for_destruction, obj)
-        end
-
-        klass.after_commit(on: :update) do
+          block.call
           @nested_attribute_destruction_monitor.send(:save_succeeded)
         end
       end
